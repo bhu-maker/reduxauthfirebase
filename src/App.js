@@ -1,8 +1,8 @@
-import logo from './logo.svg';
-import './App.css';
 import { useState } from 'react';
 import {  createUserWithEmailAndPassword ,onAuthStateChanged, signInWithEmailAndPassword, signOut} from "firebase/auth";
 import { auth } from './firebase_connection';
+import {useDispatch} from 'react-redux'
+import { SignupAction } from './redux/actions/SignupAction';
 
 function App() {
   const [registerEmail,setregisterEmail] = useState("")
@@ -10,10 +10,13 @@ function App() {
   const [loginEmail,setloginEmail] = useState("")
   const [loginPassword,setloginPassword]=useState("")
   const [user,setUser] = useState({})
-  
+  const dispatch = useDispatch()
   const register = async () => {
+    
     try{const user = await createUserWithEmailAndPassword(auth,registerEmail,registerPassword);
-      console.log(user)
+      console.log(user._tokenResponse)
+      dispatch(SignupAction(user._tokenResponse))
+
     }catch(error){
       console.log(error.message)
     }
